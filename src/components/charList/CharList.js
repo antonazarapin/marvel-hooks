@@ -2,35 +2,28 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import './charList.scss';
-import MarverService from '../../services/MarverService';
+import useMarverService from '../../services/MarverService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
 const CharList = (props) => {
 
     const [charList, setCharList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
     const [activeCharacter, setActiveCharacter] = useState(true);
 
-    const marverService = new MarverService();
+    const {loading, error, getAllCharacters} = useMarverService();
 
     useEffect(() => {
-        onRequest()
+        onRequest(offset, true)
     }, [])
 
-    const onRequest = (offset) => {
-        onCharLoading();
-        marverService.getAllCharacters(offset)
+    const onRequest = (offset, initial) => {
+        initial ? setNewItemLoading(false) : setNewItemLoading(true);
+        getAllCharacters(offset)
             .then(onCharLoaded)
-            .catch(onError)
-    }
-
-    const onCharLoading = () => {
-        setNewItemLoading(true);
     }
 
     const onCharLoaded = (newCharList) => {
@@ -40,15 +33,9 @@ const CharList = (props) => {
         }
 
         setCharList(charList => [...charList, ...newCharList]);
-        setLoading(false);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
         setCharEnded(charEnded => ended)
-    }
-
-    const onError = () => {
-        setError(false);
-        setLoading(false);
     }
 
 
@@ -71,7 +58,7 @@ const CharList = (props) => {
                         <img src={item.thumbnail} 
                              alt={item.name}
                              style={
-                                item.thumbnail.indexOf('not_available') !== -1 
+                                item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
                                     ? { objectFit: 'unset' } 
                                     : { objectFit: 'cover' }
                              }/>
@@ -92,14 +79,13 @@ const CharList = (props) => {
     const items = renderItems(charList);
 
     const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? items : null;
+    const spinner = loading && !newItemLoading ? <Spinner/> : null;
 
     return (
         <div className="char__list">
             {errorMessage}
             {spinner}
-            {content}
+            {items}
 
             <button 
                 className="button button__main button__long"

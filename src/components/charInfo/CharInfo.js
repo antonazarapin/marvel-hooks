@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
-import MarverService from '../../services/MarverService';
+import useMarverService from '../../services/MarverService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton'
@@ -10,11 +10,8 @@ import './charInfo.scss';
 
 const CharInfo = (props) => {
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
 
-
-    const marverService = new MarverService();
+    const {loading, error, getCharacter, clearError} = useMarverService();
 
     useEffect(() => {
         updateChar();
@@ -22,17 +19,6 @@ const CharInfo = (props) => {
 
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
-    }
-
-    const onCharLoading = () => {
-        setLoading(true);
-        setError(false);
     }
 
     const updateChar = () => {
@@ -42,12 +28,9 @@ const CharInfo = (props) => {
             return;
         }
 
-        onCharLoading();
-
-        marverService
-            .getCharacter(charId)
-                .then(onCharLoaded)
-                .catch(onError)
+        clearError();
+        getCharacter(charId)
+            .then(onCharLoaded)
     }
 
 
@@ -88,7 +71,7 @@ const View = ({char}) => {
                 <img src={thumbnail} 
                              alt={name}
                              style={
-                                thumbnail.indexOf('not_available') !== -1 
+                                thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
                                     ? { objectFit: 'unset' } 
                                     : { objectFit: 'cover' }
                              }/>
