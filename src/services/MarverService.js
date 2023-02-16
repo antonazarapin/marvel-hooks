@@ -32,7 +32,24 @@ const useMarverService = () => {
         }
     }
 
-    return {loading, error, getAllCharacters, getCharacter, clearError}
+    const getAllComics = async (offset = _baseOffset) => {
+        const res = await request(`${_apiBase}comics?&limit=8&offset=${offset}&${_apiKey}`);
+        return res.data.results.map(_transformComics)
+    }
+
+    const _transformComics = (comics) => {
+        return {
+            id: comics.id,
+            title: comics.title,
+            pagecount: comics.pagecount,
+            price: comics.prices[0].price,
+            description: comics.textObjects[0] ? `${comics.textObjects[0].text.slice(0, 210)}...` : `The server doesn't have a description for this comics...`,
+            thumbnail: comics.thumbnail.path + '.' + comics.thumbnail.extension,
+            language: comics.textObjects[0] ? comics.textObjects[0].language : null
+        }
+    }
+
+    return {loading, error, clearError, getAllCharacters, getCharacter, getAllComics}
 }
 
 export default useMarverService;
