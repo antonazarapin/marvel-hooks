@@ -2,15 +2,16 @@
   "name": "marvel",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://antonazarapin/antonazarapin.github.io",
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "gh-pages": "^5.0.0",
     "prop-types": "^15.8.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "4.0.3",
     "sass": "^1.38.0",
     "web-vitals": "^1.0.1"
@@ -42,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "react-error-overlay": "^6.0.9",
     "sass": "^1.38.0"
   }
 }

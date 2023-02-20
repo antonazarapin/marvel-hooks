@@ -63,7 +63,6 @@ const RandomChar = () => {
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki} = char;
-    
 
     return (
         <div className="randomchar__block">
