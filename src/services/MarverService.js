@@ -37,19 +37,24 @@ const useMarverService = () => {
         return res.data.results.map(_transformComics)
     }
 
+    const getComics = async (offset = _baseOffset) => {
+        const res = await request(`${_apiBase}comics/${offset}?${_apiKey}`);
+        return _transformComics(res.data.results[0]);
+    }
+
     const _transformComics = (comics) => {
         return {
             id: comics.id,
             title: comics.title,
-            pagecount: comics.pagecount,
+            pagecount: comics.pageCount  ? `${comics.pageCount} pages`: 'There is no information about the number of pages',
             price: comics.prices[0].price,
             description: comics.textObjects[0] ? `${comics.textObjects[0].text.slice(0, 210)}...` : `The server doesn't have a description for this comics...`,
             thumbnail: comics.thumbnail.path + '.' + comics.thumbnail.extension,
-            language: comics.textObjects[0] ? comics.textObjects[0].language : null
+            language: comics.textObjects[0] ? comics.textObjects[0].language : 'en-us'
         }
     }
 
-    return {loading, error, clearError, getAllCharacters, getCharacter, getAllComics}
+    return {loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComics}
 }
 
 export default useMarverService;
