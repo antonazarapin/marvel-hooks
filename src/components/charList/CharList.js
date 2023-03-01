@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import './charList.scss';
 import useMarverService from '../../services/MarverService';
@@ -44,32 +45,41 @@ const CharList = (props) => {
         const items = arr.map(item => {
 
             return (
-                <li key={item.id}
-                    onClick={() => {
-                        props.onCharSelected(item.id)
-                        setActiveCharacter(activeCharacter => item.id)
-                    }}
-                    className={
-                        activeCharacter === item.id
-                            ? 'char__item char__item_selected'
-                            : 'char__item'
-                    }>
-                        
-                        <img src={item.thumbnail} 
-                             alt={item.name}
-                             style={
-                                item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
-                                    ? { objectFit: 'unset' } 
-                                    : { objectFit: 'cover' }
-                             }/>
-                        <div className="char__name">{item.name}</div>
-                </li>
+                <CSSTransition
+                    key={item.id}
+                    timeout={800}
+                    classNames="char__item">
+
+                    <li 
+                        onClick={() => {
+                            props.onCharSelected(item.id)
+                            setActiveCharacter(activeCharacter => item.id)
+                        }}
+                        className={
+                            activeCharacter === item.id
+                                ? 'char__item char__item_selected'
+                                : 'char__item'
+                        }>
+                            
+                            <img src={item.thumbnail} 
+                                alt={item.name}
+                                style={
+                                    item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
+                                        ? { objectFit: 'unset' } 
+                                        : { objectFit: 'cover' }
+                                }/>
+                            <div className="char__name">{item.name}</div>
+                    </li>
+                </CSSTransition>
+
             )
         })
     
         return (
             <ul className="char__grid">
-                {items}
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
             </ul>
         )
     }

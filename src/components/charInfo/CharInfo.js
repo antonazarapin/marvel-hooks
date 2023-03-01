@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition } from 'react-transition-group';
 
 import useMarverService from '../../services/MarverService';
 import Spinner from '../spinner/Spinner';
@@ -42,10 +43,12 @@ const CharInfo = (props) => {
 
     return (
         <div className="char__info">
-            {skeleton}
+            <CSSTransition in={!loading} timeout={800} classNames="char__animate">
+            <>{skeleton}
             {errorMessage}
             {spinner}
-            {content}
+            {content}</>
+            </CSSTransition>
         </div>
     )
 }
@@ -66,7 +69,7 @@ const View = ({char}) => {
     }
 
     return (
-        <>
+        <div className='char__animate'>
             <div className="char__basics">
                 <img src={thumbnail} 
                              alt={name}
@@ -104,7 +107,7 @@ const View = ({char}) => {
                     })
                 }
             </ul>
-        </>
+        </div>
     )
 }
 

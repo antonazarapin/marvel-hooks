@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { CSSTransition } from 'react-transition-group';
+
+
 import useMarverService from '../../services/MarverService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -38,9 +41,12 @@ const RandomChar = () => {
 
     return (
         <div className="randomchar">
-            {errorMessage}
-            {spinner}
-            {content}
+                {errorMessage}
+                {spinner}
+                <CSSTransition in={!loading} timeout={800} classNames="randomchar__block">
+                    <>{content}</>
+                </CSSTransition>
+
 
             <div className="randomchar__static">
                 <p className="randomchar__title">
@@ -67,14 +73,14 @@ const View = ({char}) => {
     return (
         <div className="randomchar__block">
             <img src={thumbnail} 
-                 alt="Random character" 
-                 className="randomchar__img"
-                 style={
+                alt="Random character" 
+                className="randomchar__img"
+                style={
                     thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
                         ? { objectFit: 'unset' } 
                         : { objectFit: 'cover' }
-                 }
-                 />
+                }
+                />
             <div className="randomchar__info">
                 <p className="randomchar__name">{name}</p>
                 <p className="randomchar__descr">

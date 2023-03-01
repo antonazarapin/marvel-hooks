@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import {useState, useEffect} from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import useMarverService from '../../services/MarverService';
 import Spinner from '../spinner/Spinner';
@@ -36,7 +37,9 @@ const SingleComicPage = () => {
         <>
             {errorMessage}
             {spinner}
-            {content}
+            <CSSTransition in={!loading} timeout={800} classNames="single-comic">
+                <>{content}</>
+            </CSSTransition>
         </>
     )
 }
