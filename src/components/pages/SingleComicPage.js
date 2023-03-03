@@ -46,7 +46,6 @@ const SingleComicPage = () => {
 
 const View = ({comic}) => {
     const {title, description, pagecount, thumbnail, language, price} = comic;
-    console.log(pagecount);
 
     return (
         <div className="single-comic">
