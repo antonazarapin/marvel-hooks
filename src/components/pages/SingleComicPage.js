@@ -5,6 +5,7 @@ import { CSSTransition } from 'react-transition-group';
 import useMarverService from '../../services/MarverService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
+import AppBanner from '../appBanner/AppBanner';
 
 import './singleComicPage.scss';
 
@@ -35,6 +36,7 @@ const SingleComicPage = () => {
 
     return (
         <>
+            <AppBanner/>
             {errorMessage}
             {spinner}
             <CSSTransition in={!loading} timeout={800} classNames="single-comic">

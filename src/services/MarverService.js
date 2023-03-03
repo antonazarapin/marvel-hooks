@@ -20,6 +20,17 @@ const useMarverService = () => {
         return _transformCharacter(res.data.results[0]);
     }
 
+    // const getCharacterByName = async (name) => {
+    //     const res = await request(`${_apiBase}characters?name=${name}&${_apiKey}`);
+    //     console.log(JSON.stringify(res, null, 2));
+    //     return res.data.results.map(_transformCharacter);
+    // }
+
+    const getCharacterByName = async (name) => {
+		const res = await request(`${_apiBase}characters?name=${name}&${_apiKey}`);
+		return res.data.results.map(_transformCharacter);
+	};
+
     const _transformCharacter = (char) => {
         return {
             id: char.id,
@@ -54,7 +65,7 @@ const useMarverService = () => {
         }
     }
 
-    return {loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComics}
+    return {loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComics, getCharacterByName}
 }
 
 export default useMarverService;
