@@ -27,11 +27,11 @@ const MainPage = () => {
                 
                 <div style={{display: 'flex', flexDirection: 'column'}}>
                     <ErrorBoundary>
-                        <CharInfo charId={selectedChar}/>
+                        <FindCharacter/>
                     </ErrorBoundary>
 
                     <ErrorBoundary>
-                        <FindCharacter/>
+                        <CharInfo charId={selectedChar}/>
                     </ErrorBoundary>
                 </div>
             </div>

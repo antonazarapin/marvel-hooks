@@ -31,6 +31,11 @@ const useMarverService = () => {
 		return res.data.results.map(_transformCharacter);
 	};
 
+    const getCharacterByNameStartWith = async (name) => {
+		const res = await request(`${_apiBase}characters?nameStartsWith=${name}&${_apiKey}`);
+		return res.data.results.map(_transformCharacter);
+	};
+
     const _transformCharacter = (char) => {
         return {
             id: char.id,
@@ -65,7 +70,16 @@ const useMarverService = () => {
         }
     }
 
-    return {loading, error, clearError, getAllCharacters, getCharacter, getAllComics, getComics, getCharacterByName}
+    return {
+        loading, 
+        error, 
+        clearError, 
+        getAllCharacters, 
+        getCharacter, 
+        getAllComics, 
+        getComics, 
+        getCharacterByName, 
+        getCharacterByNameStartWith}
 }
 
 export default useMarverService;

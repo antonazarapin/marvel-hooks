@@ -2,6 +2,7 @@ import { Formik, Form, Field, ErrorMessage as FormikErrorMessage} from 'formik';
 import * as Yup from "yup"
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import useMarverService from '../../services/MarverService';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -11,29 +12,55 @@ import './findCharacter.scss';
 const FindCharacter = () => {
     const [char, setChar] = useState(null);
 
-    const {loading, error, getCharacterByName, clearError} = useMarverService();
+    const {loading, error, clearError, getCharacterByNameStartWith} = useMarverService();
 
     const onCharLoaded = (char) => {
         setChar(char)
-        console.log(char[0])
     }
 
     const updateChar = (name) => {
         clearError();
 
-        getCharacterByName(name)
+        getCharacterByNameStartWith(name)
             .then(onCharLoaded)
     }
 
-    const results = !char ? null : char.length > 0 ? (
-        <div className='find__character_results'>
-            <div className='find__character_result'>There is! Visit {char[0].name} page?</div>            
+    const renderItems = (arr) => {
+        const items = arr.map((item, i) => {
+            return (
+                <CSSTransition
+                    key={i}
+                    timeout={800}
+                    classNames="find__character_item">
 
-            <Link to={`/characters/${char[0].id}`} type='submit' className="button button__secondary">
-                <div className='inner'>To page</div>
-            </Link>
-        </div>
-    ) : (
+                    <li className="find__character_item">
+                        <Link to={`/characters/${item.id}`} className="find__character_item">
+                            <img 
+                                src={item.thumbnail} 
+                                alt="ultimate war" 
+                                className="find__character_item-img"
+                                style={
+                                    item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
+                                        ? { objectFit: 'unset' } 
+                                        : { objectFit: 'cover' }
+                                }/>
+                            <div className="find__character_item-name">{item.name}</div>
+                        </Link>
+                    </li>
+                </CSSTransition>
+            )
+        })
+    
+        return (
+            <ul className="find__character_items">
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
+            </ul>
+        )
+    }
+
+    const results = !char ? null : char.length > 0 ? renderItems(char) : (
         <div className='find__character_error'>The character was not found. Check the name and try again</div>
     )
 
