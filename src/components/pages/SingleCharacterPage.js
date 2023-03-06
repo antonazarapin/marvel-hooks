@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import {useState, useEffect} from 'react';
 import { CSSTransition } from 'react-transition-group';
 
@@ -51,13 +52,28 @@ const View = ({character}) => {
 
     return (
         <div className="single-character">
-        <img src={thumbnail} alt={name} className="single-character__img"/>
-        <div className="single-character__info">
-            <h2 className="single-character__name">{name}</h2>
-            <p className="single-character__descr">{description}</p>
+            <Helmet>
+                <meta
+                    name="description"
+                    content={`${name} comics book`}
+                    />
+                <title>{name}</title>
+            </Helmet>
+            <img 
+                src={thumbnail} 
+                alt={name} 
+                className="single-character__img"
+                style={
+                    thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
+                        ? { objectFit: 'unset' } 
+                        : { objectFit: 'cover' }
+                }/>
+            <div className="single-character__info">
+                <h2 className="single-character__name">{name}</h2>
+                <p className="single-character__descr">{description}</p>
+            </div>
+            <Link to="/" className="single-character__back">Back to all</Link>
         </div>
-        <Link to="/" className="single-character__back">Back to all</Link>
-    </div>
     )
 }
 

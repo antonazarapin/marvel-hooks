@@ -35,15 +35,6 @@ const FindCharacter = () => {
 
                     <li className="find__character_item">
                         <Link to={`/characters/${item.id}`} className="find__character_item">
-                            <img 
-                                src={item.thumbnail} 
-                                alt="ultimate war" 
-                                className="find__character_item-img"
-                                style={
-                                    item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' 
-                                        ? { objectFit: 'unset' } 
-                                        : { objectFit: 'cover' }
-                                }/>
                             <div className="find__character_item-name">{item.name}</div>
                         </Link>
                     </li>
@@ -75,11 +66,12 @@ const FindCharacter = () => {
                 name: Yup.string()
                             .min(2, 'Minimum 2 characters')
                             .required('*Required field')
+                            .matches(/^[a-zA-Z0-9 ]+$/, 'Name must contain only latin letters')
             })}
             onSubmit = {({name}) => {updateChar(name)}}>
 
             <Form className='find__character'>
-                <h2 className='find__character_title'>Or find a character by name:</h2>
+                <h2 className='find__character_title'>Find a character by name:</h2>
                 <div className='find__character_form'>
 
                     <div className='find__character_in'>
