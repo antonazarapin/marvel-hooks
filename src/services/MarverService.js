@@ -1,7 +1,7 @@
 import { useHttp } from "../hooks/http.hook";
 
 const useMarverService = () => {
-    const {loading, request, error, clearError} = useHttp();
+    const {loading, request, error, clearError, process, setProcess} = useHttp();
 
 
     const _apiBase = 'https://gateway.marvel.com:443/v1/public/';
@@ -19,17 +19,6 @@ const useMarverService = () => {
         const res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
         return _transformCharacter(res.data.results[0]);
     }
-
-    // const getCharacterByName = async (name) => {
-    //     const res = await request(`${_apiBase}characters?name=${name}&${_apiKey}`);
-    //     console.log(JSON.stringify(res, null, 2));
-    //     return res.data.results.map(_transformCharacter);
-    // }
-
-    const getCharacterByName = async (name) => {
-		const res = await request(`${_apiBase}characters?name=${name}&${_apiKey}`);
-		return res.data.results.map(_transformCharacter);
-	};
 
     const getCharacterByNameStartWith = async (name) => {
 		const res = await request(`${_apiBase}characters?nameStartsWith=${name}&${_apiKey}`);
@@ -73,12 +62,13 @@ const useMarverService = () => {
     return {
         loading, 
         error, 
-        clearError, 
+        clearError,
+        process,
+        setProcess,
         getAllCharacters, 
         getCharacter, 
         getAllComics, 
         getComics, 
-        getCharacterByName, 
         getCharacterByNameStartWith}
 }
 

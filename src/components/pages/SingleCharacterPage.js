@@ -4,9 +4,8 @@ import {useState, useEffect} from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import useMarverService from '../../services/MarverService';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import AppBanner from "../appBanner/AppBanner";
+import setContent from '../../utils/setContent';
 
 import './singleCharacterPage.scss';
 
@@ -14,7 +13,7 @@ const SingleCharacterPage = () => {
     const {characterId} = useParams();
     const [character, setCharacter] = useState(null);
 
-    const {loading, error, getCharacter, clearError} = useMarverService();
+    const {loading, getCharacter, clearError, process, setProcess} = useMarverService();
 
     useEffect(() => {
         updateCharacter();
@@ -28,27 +27,21 @@ const SingleCharacterPage = () => {
         clearError();
         getCharacter(characterId)
             .then(onCharacterLoaded)
+            .then(() => setProcess('confirmed'))
     }
-
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !character) ? <View character={character}/> : null;
-    
 
     return (
         <>
             <AppBanner/>
-            {errorMessage}
-            {spinner}
             <CSSTransition in={!loading} timeout={800} classNames="single-character">
-                <>{content}</>
+                <>{setContent(process, View, character)}</>
             </CSSTransition>
         </>
     )
 }
 
-const View = ({character}) => {
-    const {name, thumbnail, description} = character;
+const View = ({data}) => {
+    const {name, thumbnail, description} = data;
 
     return (
         <div className="single-character">

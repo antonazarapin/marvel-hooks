@@ -4,9 +4,8 @@ import {useState, useEffect} from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import useMarverService from '../../services/MarverService';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import AppBanner from '../appBanner/AppBanner';
+import setContent from '../../utils/setContent';
 
 import './singleComicPage.scss';
 
@@ -14,12 +13,11 @@ const SingleComicPage = () => {
     const {comicId} = useParams();
     const [comic, setComic] = useState(null);
 
-    const {loading, error, getComics, clearError} = useMarverService();
+    const {loading, getComics, clearError, process, setProcess} = useMarverService();
 
     useEffect(() => {
         updateComic();
     }, [comicId])
-    // пользователь сам может ввести ссылку с id и приложение должно за этим следить
 
     const onComicLoaded = (comic) => {
         setComic(comic);
@@ -29,26 +27,21 @@ const SingleComicPage = () => {
         clearError();
         getComics(comicId)
             .then(onComicLoaded)
+            .then(() => setProcess('confirmed'))
     }
-
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !comic) ? <View comic={comic}/> : null;
 
     return (
         <>
             <AppBanner/>
-            {errorMessage}
-            {spinner}
             <CSSTransition in={!loading} timeout={800} classNames="single-comic">
-                <>{content}</>
+                <>{setContent(process, View, comic)}</>
             </CSSTransition>
         </>
     )
 }
 
-const View = ({comic}) => {
-    const {title, description, pagecount, thumbnail, language, price} = comic;
+const View = ({data}) => {
+    const {title, description, pagecount, thumbnail, language, price} = data;
 
     return (
         <div className="single-comic">

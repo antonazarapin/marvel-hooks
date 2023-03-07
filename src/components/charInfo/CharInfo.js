@@ -3,16 +3,14 @@ import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
 import useMarverService from '../../services/MarverService';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
-import Skeleton from '../skeleton/Skeleton'
+import setContent from '../../utils/setContent';
 
 import './charInfo.scss';
 
 const CharInfo = (props) => {
     const [char, setChar] = useState(null);
 
-    const {loading, error, getCharacter, clearError} = useMarverService();
+    const {loading, getCharacter, clearError, process, setProcess} = useMarverService();
 
     useEffect(() => {
         updateChar();
@@ -32,29 +30,20 @@ const CharInfo = (props) => {
         clearError();
         getCharacter(charId)
             .then(onCharLoaded)
+            .then(() => setProcess('confirmed'))
     }
-
-
-
-    const skeleton = char || loading || error ? null : <Skeleton/>;
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !char) ? <View char={char}/> : null;
 
     return (
         <div className="char__info">
             <CSSTransition in={!loading} timeout={800} classNames="char__animate">
-            <>{skeleton}
-            {errorMessage}
-            {spinner}
-            {content}</>
+                <>{setContent(process, View, char)}</>
             </CSSTransition>
         </div>
     )
 }
 
-const View = ({char}) => {
-    const {name, thumbnail, description, wiki, homepage, comics} = char;
+const View = ({data}) => {
+    const {name, thumbnail, description, wiki, homepage, comics} = data;
 
     const comicsUpdate = () => {
         if (comics.length > 0) {
